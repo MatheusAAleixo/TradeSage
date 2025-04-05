@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-sage-deployment
+  labels:
+    app: trade-sage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trade-sage
+  template:
+    metadata:
+      labels:
+        app: trade-sage
+    spec:
+      containers:
+      - name: trade-sage-container
+        image:
+        ports:
+        - containerPort: 8080 
+        env:
+        - name: TELEGRAM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-secrets
+              key: TELEGRAM_TOKEN
+        - name: TELEGRAM_CHAT_ID
+          valueFrom:
+            secretKeyRef:
+              name: telegram-secrets
+              key: TELEGRAM_CHAT_ID
+        - name: CONFIG_FILE
+          value: "/etc/config/modo_config.txt"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+          readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: modo-config-map

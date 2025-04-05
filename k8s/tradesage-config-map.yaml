@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: modo-config-map
+data:
+  modo_config.txt: conservador  
